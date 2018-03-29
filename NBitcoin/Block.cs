@@ -136,7 +136,31 @@ namespace NBitcoin
 				return (nBits == 0);
 			}
 		}
-#region IBitcoinSerializable Members
+		#region IBitcoinSerializable Members
+
+		/*
+		 *  READWRITE(this->nVersion);
+        nVersion = this->nVersion;
+        READWRITE(hashPrevBlock);
+        READWRITE(hashMerkleRoot);
+        READWRITE(nTime);
+        READWRITE(nBits);
+        READWRITE(nNonce);
+        READWRITE(addressBalances);
+
+        // ConnectBlock depends on vtx following header to generate CDiskTxPos
+        if (!(nType & (SER_GETHASH|SER_BLOCKHEADERONLY)))
+        {
+            READWRITE(vtx);
+            READWRITE(vchBlockSig);
+        }
+        else if (fRead)
+        {
+            const_cast<CBlock*>(this)->vtx.clear();
+            const_cast<CBlock*>(this)->vchBlockSig.clear();
+        }
+		 */
+
 
 		public void ReadWrite(BitcoinStream stream)
 		{
@@ -146,29 +170,30 @@ namespace NBitcoin
 			stream.ReadWrite(ref nTime);
 			stream.ReadWrite(ref nBits);
 			stream.ReadWrite(ref nNonce);
+
 		}
 
-#endregion
+		#endregion
 
 		public uint256 GetHash()
 		{
 			uint256 h = null;
 			var hashes = _Hashes;
-			if(hashes != null)
+			if (hashes != null)
 			{
 				h = hashes[0];
 			}
-			if(h != null)
+			if (h != null)
 				return h;
 
-			using(HashStream hs = new HashStream())
+			using (HashStream hs = new HashStream())
 			{
 				this.ReadWrite(new BitcoinStream(hs, true));
 				h = hs.GetHash();
 			}
 
 			hashes = _Hashes;
-			if(hashes != null)
+			if (hashes != null)
 			{
 				hashes[0] = h;
 			}
@@ -189,7 +214,7 @@ namespace NBitcoin
 		public void PrecomputeHash(bool invalidateExisting, bool lazily)
 		{
 			_Hashes = invalidateExisting ? new uint256[1] : _Hashes ?? new uint256[1];
-			if(!lazily && _Hashes[0] == null)
+			if (!lazily && _Hashes[0] == null)
 				_Hashes[0] = GetHash();
 		}
 
@@ -217,7 +242,7 @@ namespace NBitcoin
 		{
 			consensus = consensus ?? Consensus.Main;
 			var bits = Bits.ToBigInteger();
-			if(bits.CompareTo(BigInteger.Zero) <= 0 || bits.CompareTo(Pow256) >= 0)
+			if (bits.CompareTo(BigInteger.Zero) <= 0 || bits.CompareTo(Pow256) >= 0)
 				return false;
 			// Check proof of work matches claimed amount
 			return consensus.GetPoWHash(this) <= Bits.ToUInt256();
@@ -260,11 +285,11 @@ namespace NBitcoin
 			var mtp = prev.GetMedianTimePast() + TimeSpan.FromSeconds(1);
 			var nNewTime = mtp > now ? mtp : now;
 
-			if(nOldTime < nNewTime)
+			if (nOldTime < nNewTime)
 				this.BlockTime = nNewTime;
 
 			// Updating time can change work required on testnet:
-			if(consensus.PowAllowMinDifficultyBlocks)
+			if (consensus.PowAllowMinDifficultyBlocks)
 				Bits = GetWorkRequired(consensus, prev);
 		}
 
@@ -299,6 +324,19 @@ namespace NBitcoin
 		BlockHeader header = new BlockHeader();
 		// network and disk
 		List<Transaction> vtx = new List<Transaction>();
+		Dictionary<TxDestination, UInt64> addressBalances = new Dictionary<TxDestination, UInt64>();
+		public Dictionary<TxDestination, UInt64> AddressBalances
+		{
+			get { return this.addressBalances; }
+			set { this.addressBalances = value; }
+		}
+
+		private BlockSignature blockSignature = new BlockSignature();
+		public BlockSignature BlockSignature
+		{
+			get { return this.blockSignature; }
+			set { this.blockSignature = value; }
+		}
 
 		public List<Transaction> Transactions
 		{
@@ -337,7 +375,9 @@ namespace NBitcoin
 		public void ReadWrite(BitcoinStream stream)
 		{
 			stream.ReadWrite(ref header);
+			stream.ReadWrite(ref addressBalances); //header.BlockTime == Utils.UnixTimeToDateTime(1522338985)
 			stream.ReadWrite(ref vtx);
+			stream.ReadWrite(ref this.blockSignature);
 		}
 
 		public bool HeaderOnly
@@ -389,11 +429,11 @@ namespace NBitcoin
 		/// <returns>A new block with only the options wanted</returns>
 		public Block WithOptions(TransactionOptions options)
 		{
-			if(Transactions.Count == 0)
+			if (Transactions.Count == 0)
 				return this;
-			if(options == TransactionOptions.Witness && Transactions[0].HasWitness)
+			if (options == TransactionOptions.Witness && Transactions[0].HasWitness)
 				return this;
-			if(options == TransactionOptions.None && !Transactions[0].HasWitness)
+			if (options == TransactionOptions.None && !Transactions[0].HasWitness)
 				return this;
 			var instance = new Block();
 			var ms = new MemoryStream();
@@ -452,7 +492,7 @@ namespace NBitcoin
 		}
 		public Block CreateNextBlockWithCoinbase(BitcoinAddress address, int height, DateTimeOffset now)
 		{
-			if(address == null)
+			if (address == null)
 				throw new ArgumentNullException("address");
 			Block block = new Block();
 			block.Header.Nonce = RandomUtils.GetUInt32();
@@ -505,7 +545,7 @@ namespace NBitcoin
 			blk.Header.Version = (int)block["ver"];
 			blk.Header.HashPrevBlock = uint256.Parse((string)block["prev_block"]);
 			blk.Header.HashMerkleRoot = uint256.Parse((string)block["mrkl_root"]);
-			foreach(var tx in txs)
+			foreach (var tx in txs)
 			{
 				blk.AddTransaction(formatter.Parse((JObject)tx));
 			}
@@ -526,5 +566,90 @@ namespace NBitcoin
 		{
 			return new MerkleBlock(this, filter);
 		}
+	}
+
+	/// <summary>
+	/// A representation of a block signature.
+	/// </summary>
+	public class BlockSignature : IBitcoinSerializable
+	{
+		protected bool Equals(BlockSignature other)
+		{
+			return Equals(signature, other.signature);
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (ReferenceEquals(null, obj)) return false;
+			if (ReferenceEquals(this, obj)) return true;
+			if (obj.GetType() != this.GetType()) return false;
+			return Equals((BlockSignature)obj);
+		}
+
+		public override int GetHashCode()
+		{
+			return (signature?.GetHashCode() ?? 0);
+		}
+
+		public BlockSignature()
+		{
+			this.signature = new byte[0];
+		}
+
+		private byte[] signature;
+
+		public byte[] Signature
+		{
+			get
+			{
+				return signature;
+			}
+			set
+			{
+				signature = value;
+			}
+		}
+
+		internal void SetNull()
+		{
+			signature = new byte[0];
+		}
+
+		public bool IsEmpty()
+		{
+			return !this.signature.Any();
+		}
+
+		public static bool operator ==(BlockSignature a, BlockSignature b)
+		{
+			if (System.Object.ReferenceEquals(a, b))
+				return true;
+
+			if (((object)a == null) || ((object)b == null))
+				return false;
+
+			return a.signature.SequenceEqual(b.signature);
+		}
+
+		public static bool operator !=(BlockSignature a, BlockSignature b)
+		{
+			return !(a == b);
+		}
+
+		#region IBitcoinSerializable Members
+
+		public void ReadWrite(BitcoinStream stream)
+		{
+			stream.ReadWrite(ref signature);
+		}
+
+		#endregion
+
+		public override string ToString()
+		{
+			return Encoders.Hex.EncodeData(this.signature);
+		}
+
+
 	}
 }

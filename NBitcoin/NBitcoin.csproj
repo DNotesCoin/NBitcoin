@@ -66,10 +66,28 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>BitcoinStream.Partial.cs</LastGenOutput>
     </None>
+	<None Update="UInt256.tt">
+	  <Generator>TextTemplatingFileGenerator</Generator>
+	  <LastGenOutput>UInt256.cs</LastGenOutput>
+	</None>
 	<None Update="UInt2561.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>UInt2561.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Compile Update="BitcoinStream.Partial.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>BitcoinStream.Partial.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 	<Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">

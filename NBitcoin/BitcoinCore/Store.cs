@@ -42,6 +42,7 @@ namespace NBitcoin.BitcoinCore
 				}
 				return _FileRegex;
 			}
+			set { _FileRegex = value; }
 		}
 
 		private readonly DirectoryInfo _Folder;
