@@ -9,6 +9,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NBitcoin", "NBitcoin\NBitco
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NBitcoin.Tests", "NBitcoin.Tests\NBitcoin.Tests.csproj", "{5E742214-EA2A-4F4D-95B7-BEBB561E36E9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNotes.BlockExplorer.Web", "DNotes.BlockExplorer.Web\DNotes.BlockExplorer.Web.csproj", "{214118E6-36ED-4109-967B-4E8883649E5D}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "DNotes.BlockExplorer.Database", "DNotes.BlockExplorer.Database\DNotes.BlockExplorer.Database.sqlproj", "{A59B0C0F-F1D2-4361-B64E-8BBD0FFD54AF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNotes.BlockExplorer.Service", "DNotes.BlockExplorer.Service\DNotes.BlockExplorer.Service.csproj", "{5105E374-D34A-4929-8AD6-AE2FC0C0D444}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNotes.Infrastructure", "DNotes.Infrastructure\DNotes.Infrastructure.csproj", "{229895E3-8B4D-4A21-A520-2104F87CEC48}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +35,24 @@ Global
 		{5E742214-EA2A-4F4D-95B7-BEBB561E36E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E742214-EA2A-4F4D-95B7-BEBB561E36E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E742214-EA2A-4F4D-95B7-BEBB561E36E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{214118E6-36ED-4109-967B-4E8883649E5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{214118E6-36ED-4109-967B-4E8883649E5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{214118E6-36ED-4109-967B-4E8883649E5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{214118E6-36ED-4109-967B-4E8883649E5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A59B0C0F-F1D2-4361-B64E-8BBD0FFD54AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A59B0C0F-F1D2-4361-B64E-8BBD0FFD54AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A59B0C0F-F1D2-4361-B64E-8BBD0FFD54AF}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{A59B0C0F-F1D2-4361-B64E-8BBD0FFD54AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A59B0C0F-F1D2-4361-B64E-8BBD0FFD54AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A59B0C0F-F1D2-4361-B64E-8BBD0FFD54AF}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{5105E374-D34A-4929-8AD6-AE2FC0C0D444}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5105E374-D34A-4929-8AD6-AE2FC0C0D444}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5105E374-D34A-4929-8AD6-AE2FC0C0D444}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5105E374-D34A-4929-8AD6-AE2FC0C0D444}.Release|Any CPU.Build.0 = Release|Any CPU
+		{229895E3-8B4D-4A21-A520-2104F87CEC48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{229895E3-8B4D-4A21-A520-2104F87CEC48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{229895E3-8B4D-4A21-A520-2104F87CEC48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{229895E3-8B4D-4A21-A520-2104F87CEC48}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

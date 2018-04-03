@@ -1,0 +1,16 @@
+﻿@model BlockListViewModel
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<h1>DNotes Block Explorer</h1>
+@foreach (var block in Model.Blocks)
+{
+    <div class="row">
+        <div class="col-md-3">
+            block
+        </div>
+    </div>
+}
+
