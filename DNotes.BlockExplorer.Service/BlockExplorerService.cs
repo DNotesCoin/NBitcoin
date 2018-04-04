@@ -12,7 +12,7 @@ namespace DNotes.BlockExplorer.Service
 	{
 
 		public const string ConnectionString =
-			"Data Source=dnotesdevsql.database.windows.net;Persist Security Info=True;User ID=DNotesDevSQLAdmin;Password=S#aSnjBcKMJWwKRT!;initial catalog=DNotes.BlockExplorer;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=True";
+			"Data Source=publicrepositoriesarefunt;Persist Security Info=True;User ID=public;Password=publicrepositoriesarefun!;initial catalog=DNotes.BlockExplorer;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=True";
 
 		public static Dictionary<uint256, Block> GetAllBlocks()
 		{
