@@ -635,8 +635,8 @@ namespace NBitcoin
 			stream.ReadWrite(ref value);
 			if (!stream.Serializing)
 				_Value = new Money(value);
-			stream.ReadWrite(ref publicKey);
 			stream.ReadWriteString(ref _InvoiceNumber);
+			stream.ReadWrite(ref publicKey);
 		}
 
 		#endregion
@@ -1149,6 +1149,8 @@ namespace NBitcoin
 			}
 		}
 
+		public uint256 hashHACK;
+
 		uint nVersion = 1;
 		public uint Version
 		{
@@ -1293,6 +1295,7 @@ namespace NBitcoin
 			{
 				var version = (witSupported && (vin.Count == 0 && vout.Count > 0)) ? nVersion | NoDummyInput : nVersion;
 				stream.ReadWrite(ref version);
+				stream.ReadWrite(ref nTime);
 
 				if (witSupported)
 				{

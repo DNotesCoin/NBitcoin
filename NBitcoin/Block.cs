@@ -44,6 +44,8 @@ namespace NBitcoin
 		// header
 		const int CURRENT_VERSION = 3;
 
+		public uint256 hashHACK;
+
 		uint256 hashPrevBlock;
 
 		public uint256 HashPrevBlock

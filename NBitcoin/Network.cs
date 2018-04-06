@@ -745,11 +745,12 @@ namespace NBitcoin
 			vAlertPubKey = Encoders.Hex.DecodeData("04fc9702847840aaf195de8442ebecedf5b095cdbb9bc716bda9110971b28a49e0ead8564ff0db22209e0374782c093bb899692d524e9d6a6956e7c5ecbcd68284");
 			nDefaultPort = 8333;
 			nRPCPort = 8332;
-
+			/*
 			genesis = CreateGenesisBlock(1231006505, 2083236893, 0x1d00ffff, 1, Money.Coins(50m));
 			consensus.HashGenesisBlock = genesis.GetHash();
 			assert(consensus.HashGenesisBlock == uint256.Parse("0x000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"));
 			assert(genesis.Header.HashMerkleRoot == uint256.Parse("0x4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"));
+			*/
 #if !NOSOCKET
 			vSeeds.Add(new DNSSeedData("bitcoin.sipa.be", "seed.bitcoin.sipa.be")); // Pieter Wuille
 			vSeeds.Add(new DNSSeedData("bluematt.me", "dnsseed.bluematt.me")); // Matt Corallo
@@ -758,13 +759,13 @@ namespace NBitcoin
 			vSeeds.Add(new DNSSeedData("xf2.org", "bitseed.xf2.org")); // Jeff Garzik
 			vSeeds.Add(new DNSSeedData("bitcoin.jonasschnelli.ch", "seed.bitcoin.jonasschnelli.ch")); // Jonas Schnelli
 #endif
-			base58Prefixes[(int)Base58Type.PUBKEY_ADDRESS] = new byte[] { (0) };
-			base58Prefixes[(int)Base58Type.SCRIPT_ADDRESS] = new byte[] { (5) };
-			base58Prefixes[(int)Base58Type.SECRET_KEY] = new byte[] { (128) };
+			base58Prefixes[(int)Base58Type.PUBKEY_ADDRESS] = new byte[] { (63) };
+			base58Prefixes[(int)Base58Type.SCRIPT_ADDRESS] = new byte[] { (125) };
+			base58Prefixes[(int)Base58Type.SECRET_KEY] = new byte[] { (63 + 128) };
 			base58Prefixes[(int)Base58Type.ENCRYPTED_SECRET_KEY_NO_EC] = new byte[] { 0x01, 0x42 };
 			base58Prefixes[(int)Base58Type.ENCRYPTED_SECRET_KEY_EC] = new byte[] { 0x01, 0x43 };
-			base58Prefixes[(int)Base58Type.EXT_PUBLIC_KEY] = new byte[] { (0x04), (0x88), (0xB2), (0x1E) };
-			base58Prefixes[(int)Base58Type.EXT_SECRET_KEY] = new byte[] { (0x04), (0x88), (0xAD), (0xE4) };
+			base58Prefixes[(int)Base58Type.EXT_PUBLIC_KEY] = new byte[] { (0x04), (0x88), (0xC2), (0x1E) };
+			base58Prefixes[(int)Base58Type.EXT_SECRET_KEY] = new byte[] { (0x04), (0x88), (0xB2), (0xDD) };
 			base58Prefixes[(int)Base58Type.PASSPHRASE_CODE] = new byte[] { 0x2C, 0xE9, 0xB3, 0xE1, 0xFF, 0x39, 0xE2 };
 			base58Prefixes[(int)Base58Type.CONFIRMATION_CODE] = new byte[] { 0x64, 0x3B, 0xF6, 0xA8, 0x9A };
 			base58Prefixes[(int)Base58Type.STEALTH_ADDRESS] = new byte[] { 0x2a };
@@ -828,11 +829,12 @@ namespace NBitcoin
 			//strDataDir = "testnet3";
 
 			// Modify the testnet genesis block so the timestamp is valid for a later start.
+			/*
 			genesis = CreateGenesisBlock(1296688602, 414098458, 0x1d00ffff, 1, Money.Coins(50m));
 			consensus.HashGenesisBlock = genesis.GetHash();
 
 			assert(consensus.HashGenesisBlock == uint256.Parse("0x000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943"));
-
+			*/
 #if !NOSOCKET
 			vFixedSeeds.Clear();
 			vSeeds.Clear();
@@ -842,9 +844,11 @@ namespace NBitcoin
 #endif
 
 			base58Prefixes = Network.Main.base58Prefixes.ToArray();
-			base58Prefixes[(int)Base58Type.PUBKEY_ADDRESS] = new byte[] { (111) };
+			//base58Prefixes[(int)Base58Type.PUBKEY_ADDRESS] = new byte[] { (111) }; //bitcoin
+			base58Prefixes[(int)Base58Type.PUBKEY_ADDRESS] = new byte[] { (65) }; //dnotes
 			base58Prefixes[(int)Base58Type.SCRIPT_ADDRESS] = new byte[] { (196) };
-			base58Prefixes[(int)Base58Type.SECRET_KEY] = new byte[] { (239) };
+			//base58Prefixes[(int)Base58Type.SECRET_KEY] = new byte[] { (239) }; //bitcoin
+			base58Prefixes[(int)Base58Type.SECRET_KEY] = new byte[] { (65 + 128) }; //dnotes
 			base58Prefixes[(int)Base58Type.EXT_PUBLIC_KEY] = new byte[] { (0x04), (0x35), (0x87), (0xCF) };
 			base58Prefixes[(int)Base58Type.EXT_SECRET_KEY] = new byte[] { (0x04), (0x35), (0x83), (0x94) };
 			base58Prefixes[(int)Base58Type.STEALTH_ADDRESS] = new byte[] { 0x2b };
@@ -881,23 +885,28 @@ namespace NBitcoin
 			consensus.BIP9Deployments[BIP9Deployments.TestDummy] = new BIP9DeploymentsParameters(28, 0, 999999999);
 			consensus.BIP9Deployments[BIP9Deployments.CSV] = new BIP9DeploymentsParameters(0, 0, 999999999);
 			consensus.BIP9Deployments[BIP9Deployments.Segwit] = new BIP9DeploymentsParameters(1, BIP9DeploymentsParameters.AlwaysActive, 999999999);
-
+			/*
 			genesis = CreateGenesisBlock(1296688602, 2, 0x207fffff, 1, Money.Coins(50m));
 			consensus.HashGenesisBlock = genesis.GetHash();
+			assert(consensus.HashGenesisBlock == uint256.Parse("0x0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206"));
+			*/
 			nDefaultPort = 18444;
 			nRPCPort = 18443;
 			//strDataDir = "regtest";
-			assert(consensus.HashGenesisBlock == uint256.Parse("0x0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206"));
 
 #if !NOSOCKET
 			vSeeds.Clear();  // Regtest mode doesn't have any DNS seeds.
 #endif
 			base58Prefixes = Network.TestNet.base58Prefixes.ToArray();
-			base58Prefixes[(int)Base58Type.PUBKEY_ADDRESS] = new byte[] { (111) };
+			//base58Prefixes[(int)Base58Type.PUBKEY_ADDRESS] = new byte[] { (111) }; //bitcoin
+			base58Prefixes[(int)Base58Type.PUBKEY_ADDRESS] = new byte[] { (65) }; //dnotes
 			base58Prefixes[(int)Base58Type.SCRIPT_ADDRESS] = new byte[] { (196) };
-			base58Prefixes[(int)Base58Type.SECRET_KEY] = new byte[] { (239) };
+			//base58Prefixes[(int)Base58Type.SECRET_KEY] = new byte[] { (239) }; //bitcoin
+			base58Prefixes[(int)Base58Type.SECRET_KEY] = new byte[] { (65 + 128) }; //dnotes
 			base58Prefixes[(int)Base58Type.EXT_PUBLIC_KEY] = new byte[] { (0x04), (0x35), (0x87), (0xCF) };
 			base58Prefixes[(int)Base58Type.EXT_SECRET_KEY] = new byte[] { (0x04), (0x35), (0x83), (0x94) };
+			base58Prefixes[(int)Base58Type.STEALTH_ADDRESS] = new byte[] { 0x2b };
+			base58Prefixes[(int)Base58Type.ASSET_ID] = new byte[] { 115 };
 			base58Prefixes[(int)Base58Type.COLORED_ADDRESS] = new byte[] { 0x13 };
 
 			var encoder = new Bech32Encoder("bcrt");
@@ -1366,10 +1375,10 @@ namespace NBitcoin
 				{
 					var bytes = new byte[]
 					{
-						(byte)Magic,
-						(byte)(Magic >> 8),
-						(byte)(Magic >> 16),
-						(byte)(Magic >> 24)
+			(byte)Magic,
+			(byte)(Magic >> 8),
+			(byte)(Magic >> 16),
+			(byte)(Magic >> 24)
 					};
 					_MagicBytes = bytes;
 				}

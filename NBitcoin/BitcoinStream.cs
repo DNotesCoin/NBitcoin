@@ -348,7 +348,19 @@ namespace NBitcoin
 
 		public void ReadWriteString(ref string value)
 		{
-			byte[] bytes = Encoding.UTF8.GetBytes(value);
+			byte[] bytes;
+			if (Serializing)
+			{
+				bytes = Encoding.UTF8.GetBytes(value);
+			}
+			else
+			{
+				VarInt size = new VarInt();
+				size.SetValue(value == null ? 0 : (ulong)value.Length);
+				ReadWrite(ref size);
+				bytes = new byte[(int)size.ToLong()];
+			}
+
 			ReadWriteBytes(ref bytes);
 
 			if (!Serializing)
