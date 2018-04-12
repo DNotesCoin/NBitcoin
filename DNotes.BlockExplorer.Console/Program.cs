@@ -45,22 +45,23 @@ namespace DNotes.BlockExplorer.Console
 					break;
 				}
 
-				//this fork detection works for 1 block forks. needs enhancement to detect larger ones and still find the longest chain.
 				var possibleNewTips = blocksByPrevBlockHash[tip.Header.GetHash()];
 				if (possibleNewTips.Count > 1)
 				{
 					System.Console.WriteLine("Fork Detected at Block {0}", blockChain.Count);
 					Block newTip = null;
+					var longestForkLength = 0;
 					foreach (var possibleNewTip in possibleNewTips)
 					{
 						if (!blocksByPrevBlockHash.ContainsKey(possibleNewTip.Header.GetHash()))
 						{
 							continue;
 						}
-
-						var possibleNewForkTips = blocksByPrevBlockHash[possibleNewTip.Header.GetHash()];
-						if (possibleNewForkTips.Count > 0)
+						var forkLength = GetForkLength(possibleNewTip);
+						System.Console.WriteLine("Fork of size {0} found at {1}", forkLength, blockChain.Count);
+						if (forkLength > longestForkLength)
 						{
+							longestForkLength = forkLength;
 							newTip = possibleNewTip;
 						}
 					}
@@ -78,7 +79,6 @@ namespace DNotes.BlockExplorer.Console
 			}
 
 			System.Console.WriteLine(blockChain.Count);
-
 			var dbBlocks = BlockExplorerService.GetAllBlocks();
 			for (var index = 0; index < blockChain.Count; index++)
 			{
@@ -108,6 +108,27 @@ namespace DNotes.BlockExplorer.Console
 			var tip = chain.Tip;
 			var tipBlock = index.Get(tip.HashBlock);
 			*/
+		}
+
+		private int GetForkLength(Block tip)
+		{
+			var length = 1;
+			var tipHash = tip.Header.GetHash();
+			if (!blocksByPrevBlockHash.ContainsKey(tipHash))
+			{
+				return length;
+			}
+			var childTips = blocksByPrevBlockHash[tipHash];
+			var longestChildLength = 0;
+			foreach (var childTip in childTips)
+			{
+				var childLength = GetForkLength(childTip);
+				if (childLength > longestChildLength)
+					longestChildLength = childLength;
+			}
+
+			return length + longestChildLength;
+
 		}
 
 		private static Dictionary<uint256, Block> LoadBlocksFromDisk(Network network)
