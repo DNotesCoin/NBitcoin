@@ -10,6 +10,7 @@
     [Version] INT NOT NULL, 
     [Nonce] INT NOT NULL, 
     [Type] SMALLINT NOT NULL,
-	CONSTRAINT [PK_Block] PRIMARY KEY ([Id])
+	CONSTRAINT [PK_Block] PRIMARY KEY ([Id]),
+	CONSTRAINT [UK_Hash] UNIQUE ([Hash])
 )
 

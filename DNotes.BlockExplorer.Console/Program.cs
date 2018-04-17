@@ -57,7 +57,7 @@ namespace DNotes.BlockExplorer.Console
 						{
 							continue;
 						}
-						var forkLength = GetForkLength(possibleNewTip);
+						var forkLength = GetForkLength(possibleNewTip, blocksByPrevBlockHash);
 						System.Console.WriteLine("Fork of size {0} found at {1}", forkLength, blockChain.Count);
 						if (forkLength > longestForkLength)
 						{
@@ -110,7 +110,7 @@ namespace DNotes.BlockExplorer.Console
 			*/
 		}
 
-		private int GetForkLength(Block tip)
+		private static int GetForkLength(Block tip, Dictionary<uint256, List<Block>> blocksByPrevBlockHash)
 		{
 			var length = 1;
 			var tipHash = tip.Header.GetHash();
@@ -122,7 +122,7 @@ namespace DNotes.BlockExplorer.Console
 			var longestChildLength = 0;
 			foreach (var childTip in childTips)
 			{
-				var childLength = GetForkLength(childTip);
+				var childLength = GetForkLength(childTip, blocksByPrevBlockHash);
 				if (childLength > longestChildLength)
 					longestChildLength = childLength;
 			}
