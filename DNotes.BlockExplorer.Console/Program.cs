@@ -57,8 +57,14 @@ namespace DNotes.BlockExplorer.Console
 						{
 							continue;
 						}
-						var forkLength = GetForkLength(possibleNewTip, blocksByPrevBlockHash);
-						System.Console.WriteLine("Fork of size {0} found at {1}", forkLength, blockChain.Count);
+
+						int maxForkLength = 4320;
+						//search for fork no longer than 4320,  in case blockchain fork in production occurs (hopefully, never)
+						var forkLength = GetForkLength(possibleNewTip, blocksByPrevBlockHash, maxForkLength);
+						if (forkLength == maxForkLength)
+						{ System.Console.WriteLine("Fork of size MAX found at {1}", forkLength, blockChain.Count); }
+						else
+						{ System.Console.WriteLine("Fork of size {0} found at {1}", forkLength, blockChain.Count); }
 						if (forkLength > longestForkLength)
 						{
 							longestForkLength = forkLength;
@@ -110,11 +116,18 @@ namespace DNotes.BlockExplorer.Console
 			*/
 		}
 
-		private static int GetForkLength(Block tip, Dictionary<uint256, List<Block>> blocksByPrevBlockHash)
+		/// <summary>
+		/// Find the fork length recursively
+		/// </summary>
+		/// <param name="tip"></param>
+		/// <param name="blocksByPrevBlockHash"></param>
+		/// <param name="limit">Search down the tree no longer than this amout to prevent a stack overflow</param>
+		/// <returns></returns>
+		private static int GetForkLength(Block tip, Dictionary<uint256, List<Block>> blocksByPrevBlockHash, int limit = int.MaxValue)
 		{
 			var length = 1;
 			var tipHash = tip.Header.GetHash();
-			if (!blocksByPrevBlockHash.ContainsKey(tipHash))
+			if (!blocksByPrevBlockHash.ContainsKey(tipHash) || limit == 1)
 			{
 				return length;
 			}
@@ -122,7 +135,7 @@ namespace DNotes.BlockExplorer.Console
 			var longestChildLength = 0;
 			foreach (var childTip in childTips)
 			{
-				var childLength = GetForkLength(childTip, blocksByPrevBlockHash);
+				var childLength = GetForkLength(childTip, blocksByPrevBlockHash, limit-1);
 				if (childLength > longestChildLength)
 					longestChildLength = childLength;
 			}
